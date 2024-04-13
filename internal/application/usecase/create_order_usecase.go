@@ -1,7 +1,6 @@
 package usecase
 
 import (
-	"context"
 	"fmt"
 
 	"github.com/briannbig/event-driven/internal/application/dto"
@@ -20,7 +19,7 @@ func NewCreateOrderUseCase(publisher queue.Publisher) *CreateOrderUseCase {
 	}
 }
 
-func (u *CreateOrderUseCase) Execute(ctx context.Context, input dto.CreateOrderDTO) error {
+func (u *CreateOrderUseCase) Execute(input dto.CreateOrderDTO) error {
 	fmt.Println("--- CreateOrderUseCase ---")
 
 	// create order
@@ -53,7 +52,7 @@ func (u *CreateOrderUseCase) Execute(ctx context.Context, input dto.CreateOrderD
 	}
 
 	// publish event OrderCreatedEvent passing the order data
-	err = u.publisher.Publish(ctx, event.OrderCreatedEvent{
+	err = u.publisher.Publish(event.OrderCreatedEvent{
 		Id:         order.GetID(),
 		TotalPrice: order.GetTotalPrice(),
 		Status:     order.GetStatus(),

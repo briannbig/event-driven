@@ -1,7 +1,6 @@
 package usecase
 
 import (
-	"context"
 	"fmt"
 	"time"
 
@@ -20,7 +19,7 @@ func NewProcessOrderPaymentUseCase(publisher queue.Publisher) *ProcessOrderPayme
 	}
 }
 
-func (h *ProcessOrderPaymentUseCase) Execute(ctx context.Context, payload *event.OrderCreatedEvent) error {
+func (h *ProcessOrderPaymentUseCase) Execute( payload *event.OrderCreatedEvent) error {
 	fmt.Println("--- ProcessOrderPaymentUseCase ---")
 
 	// TODO: find order by id in the repository database here
@@ -41,7 +40,7 @@ func (h *ProcessOrderPaymentUseCase) Execute(ctx context.Context, payload *event
 	}
 
 	fmt.Printf("Order Paid. Value: %f \n", payload.TotalPrice)
-	err = h.publisher.Publish(ctx, event.OrderPaidEvent{OrderId: payload.Id, PaidValue: paymentValue, PaymentDate: time.Now()})
+	err = h.publisher.Publish(event.OrderPaidEvent{OrderId: payload.Id, PaidValue: paymentValue, PaymentDate: time.Now()})
 	if err != nil {
 		return err
 	}
